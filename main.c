@@ -26,24 +26,28 @@ int main (int argc, char **argv)
     int B = 2;
     int T = 1;
     char *empty ="0000000000000000000000000";
+    char *six_empty ="000000000000000000000000000000000000";
+    char *sevem_empty = "0000000000000000000000000000000000000000000000000";
     char *one_round ="0000900900900000009009000";
     char *empty_condition= "9332219500000130000031000002200000220090039312239";
     char *one_round_cond = "9221109400009020090020900001100090110900029201129";
+    char *six_empty_cond = "9152223910000003400000023000000330000001200000022000000493122439";
+    char *seven_empty_cond = "912233239100000003300000002200000004200000003300000002400000001300000004932213329";
 
 
 // end of for testing
 	int dim;
     int dim_con;
-	dim = 5;
-    dim_con = 7;
+	dim = 6;
+    dim_con = 8;
 
 	bool_rows = init_tab(dim);
 	bool_columns = init_tab(dim);
 	ultimate = init_tab(dim_con);
 
-	ultimate = set_value(ultimate, one_round_cond, dim_con);
-    bool_rows = set_value(bool_rows, one_round, dim);
-    bool_columns = set_value(bool_columns, one_round, dim);
+	ultimate = set_value(ultimate, six_empty_cond, dim_con);
+    bool_rows = set_value(bool_rows, six_empty, dim);
+    bool_columns = set_value(bool_columns, six_empty, dim);
 // bool_rows and columns are already initialised filed with 0 :P
     print_tab(ultimate, dim_con);
     // transpose(ultimate, dim_con);
@@ -56,6 +60,7 @@ int main (int argc, char **argv)
 
 
     ft_compare_tab(bool_rows,bool_columns,ultimate,dim,dim_con);
+
     printf("boll_selected\n");
     print_tab(bool_rows, dim);
 

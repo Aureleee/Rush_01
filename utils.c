@@ -8,6 +8,51 @@ void ft_mult_tab(int **bool_rows, int **bool_columns, int dim);
 void    ft_evaluate_tab(int **bool_array,int **condition_array, int dim);
 void    ft_select(int **bool_rows, int dim, int *no_more_loop);
 void	print_tab(int **tab, int dim);
+int **init_tab(int dim);    
+int 	**set_value(int **tab, char *str,int dim);
+void    ft_compare_tab(int **bool_rows,  int **bool_columns,int **ultimate, int dim, int dim_con);
+
+
+
+void ALORS_PEUT_ETRE(int **ultimate ,int **THE_ARRAY_OF_INFINITY,char *empty_condition,int dim)
+{
+    int dim_con;
+    int **bool_rows;
+	int **bool_columns;
+    char *empty;
+    int tower;
+
+    tower = dim;
+
+    dim_con = dim + 2;
+	bool_rows = init_tab(dim);
+	bool_columns = init_tab(dim);
+
+    ultimate = set_value(ultimate, empty, dim_con); // in this  we will change the condition
+    THE_ARRAY_OF_INFINITY = set_value(ultimate, empty, dim_con); //array to store the final values 
+    bool_rows = set_value(bool_rows, empty, dim);
+    bool_columns = set_value(bool_columns, empty, dim);
+
+    while(tower > 0)
+    {
+        ft_compare_tab(bool_rows,bool_columns,ultimate,dim,dim_con);
+                 
+
+        tower--;
+    }
+
+
+}
+
+void    ft_update(int **THE_ARRAY_OF_INFINITY,int **bool_rows, int dim)
+{
+    int rows;
+    int 
+}
+
+
+
+
 
 
 void    ft_select(int **bool_rows, int dim, int *no_more_loop)
@@ -90,20 +135,20 @@ void    ft_compare_tab(int **bool_rows,  int **bool_columns,int **ultimate, int 
 
     ft_mult_tab(bool_rows,bool_columns,dim);// mutiplication
 
-
+    int i = 0;
     // count number of possibility on each row and if only one, erase the corresponding columns.
     //We need to made a loop here, because it might be require to select multiple time before having 
     // a clear array :)
-    while (no_more_loop)
+    while (i < 7)
     {
         no_more_loop = 0;
         ft_select(bool_rows, dim,&no_more_loop);
         transpose(bool_rows,dim);  // l'idee derriere la transposition c'est de select une fois sur 
         //deux sur les colonnes et les lignes :)
-        count_transpo++;
+        i++;
     }
-    if(count_transpo % 2)
-        transpose(bool_rows,dim);
+    //if(count_transpo % 2)
+     //   transpose(bool_rows,dim);
     // il faut bien la remettre a l'endroit hahah
 }
 
