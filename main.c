@@ -11,6 +11,9 @@ void	print_tab(int **tab, int dim);
 void    ft_evaluate_tab(int **bool_array,int **condition_array, int dim); 
 void	ft_evaluate_line(int *line,int index_line, int dim, int *B, int *T);
 void    ft_select(int **bool_rows, int dim, int *no_more_loop);
+void    ft_sub_update(int **THE_ARRAY_OF_INFINITY,int **bool_rows, int dim);
+void    ft_update(int **THE_ARRAY_OF_INFINITY,int **bool_rows, int dim, int tower);
+
 //useful asf
 void transpose(int **tab_src, int dim);
 void ft_compare_tab(int **bool_rows, int **bool_columns,int **ultimate, int dim, int dim_con);
@@ -38,16 +41,16 @@ int main (int argc, char **argv)
 // end of for testing
 	int dim;
     int dim_con;
-	dim = 6;
-    dim_con = 8;
+	dim = 5;
+    dim_con = 7;
 
 	bool_rows = init_tab(dim);
 	bool_columns = init_tab(dim);
 	ultimate = init_tab(dim_con);
 
-	ultimate = set_value(ultimate, six_empty_cond, dim_con);
-    bool_rows = set_value(bool_rows, six_empty, dim);
-    bool_columns = set_value(bool_columns, six_empty, dim);
+	ultimate = set_value(ultimate, empty_condition, dim_con);
+    bool_rows = set_value(bool_rows, empty, dim);
+    bool_columns = set_value(bool_columns, empty, dim);
 // bool_rows and columns are already initialised filed with 0 :P
     print_tab(ultimate, dim_con);
     // transpose(ultimate, dim_con);
@@ -62,6 +65,11 @@ int main (int argc, char **argv)
     ft_compare_tab(bool_rows,bool_columns,ultimate,dim,dim_con);
 
     printf("boll_selected\n");
+    //print_tab(bool_rows, dim);
+    print_tab(ultimate, dim_con);
+
+    ft_update(ultimate,bool_rows,dim, dim);
+    print_tab(ultimate, dim_con);
     print_tab(bool_rows, dim);
 
 

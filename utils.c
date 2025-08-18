@@ -11,7 +11,8 @@ void	print_tab(int **tab, int dim);
 int **init_tab(int dim);    
 int 	**set_value(int **tab, char *str,int dim);
 void    ft_compare_tab(int **bool_rows,  int **bool_columns,int **ultimate, int dim, int dim_con);
-
+void    ft_sub_update(int **THE_ARRAY_OF_INFINITY,int **bool_rows, int dim);
+void    ft_update(int **THE_ARRAY_OF_INFINITY,int **bool_rows, int dim, int tower);
 
 
 void ALORS_PEUT_ETRE(int **ultimate ,int **THE_ARRAY_OF_INFINITY,char *empty_condition,int dim)
@@ -44,10 +45,67 @@ void ALORS_PEUT_ETRE(int **ultimate ,int **THE_ARRAY_OF_INFINITY,char *empty_con
 
 }
 
-void    ft_update(int **THE_ARRAY_OF_INFINITY,int **bool_rows, int dim)
+
+
+void    ft_update(int **THE_ARRAY_OF_INFINITY,int **bool_rows, int dim, int tower)
 {
     int rows;
-    int 
+    int columns;
+
+    rows = 1;
+    columns = 1;
+    if(tower == dim)
+        {
+            while ( rows < dim + 1 )
+                {
+                    THE_ARRAY_OF_INFINITY[rows][0]--;
+                    THE_ARRAY_OF_INFINITY[rows][dim + 1]--;
+                    rows++;
+                }
+            while ( columns < dim + 1 )
+                {
+                    THE_ARRAY_OF_INFINITY[0][columns]--;
+                    THE_ARRAY_OF_INFINITY[dim +1][columns]--;
+                    columns++;
+                }
+                bool_rows*=9;
+
+        }
+    else
+    {
+        ft_sub_update(THE_ARRAY_OF_INFINITY,bool_rows, dim);
+        transpose(THE_ARRAY_OF_INFINITY, dim +2);
+        transpose(bool_rows, dim);
+        ft_sub_update(THE_ARRAY_OF_INFINITY,bool_rows, dim);
+        transpose(THE_ARRAY_OF_INFINITY, dim +2);
+        transpose(bool_rows, dim);
+    }
+
+}
+void    ft_sub_update(int **THE_ARRAY_OF_INFINITY,int **bool_rows, int dim)
+{
+    int rows;
+    int columns;
+    int side;
+
+    side = 1;
+    rows = 0;
+    while(rows < dim)
+    {
+        columns = 0;
+        while (columns < dim)
+        {
+            if(bool_rows[rows][columns] == 1 && side == 1)
+                side = 0;  // bottom side
+            if(bool_rows[rows][columns] == 9 && side == 1)
+                side = dim + 1; // top side 
+            if(bool_rows[rows][columns] == 1)
+                bool_rows[rows][columns] = 9;
+            columns++;
+        }
+        THE_ARRAY_OF_INFINITY[rows +1][side]--;
+        rows++;
+    }
 }
 
 
@@ -80,8 +138,8 @@ void    ft_select(int **bool_rows, int dim, int *no_more_loop)
         }
         if (count == 1)
         {
-            printf("rows = %d ",rows );
-            printf("columns = %d\n",pos );
+            // printf("rows = %d ",rows );
+            // printf("columns = %d\n",pos );
 
             row_sub = 0;
             while (row_sub < dim)
@@ -213,7 +271,7 @@ void    ft_evaluate_line(int *line,int index_line, int dim, int *B, int *T)   //
 
 	indexB = *B - 1;
 	indexT = dim - *T;
-    if (dim - *T - *B + 1 < 0) 
+    if (dim - *T - *B + 1 < 0)  
         printf("no solution\n");
     else if (bottom_edge - top_edge - 2 >= 0)
     {
