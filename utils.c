@@ -7,6 +7,7 @@ void transpose(int **tab_src, int dim);
 void ft_mult_tab(int **bool_rows, int **bool_columns, int dim);
 void    ft_evaluate_tab(int **bool_array,int **condition_array, int dim);
 void    ft_select(int **bool_rows, int dim, int *no_more_loop);
+void	print_tab(int **tab, int dim);
 
 
 void    ft_select(int **bool_rows, int dim, int *no_more_loop)
@@ -67,11 +68,26 @@ void    ft_compare_tab(int **bool_rows,  int **bool_columns,int **ultimate, int 
 
     no_more_loop = 1;
     count_transpo = 0;
+
     ft_evaluate_tab(bool_rows,ultimate,dim); // This function evaluate the rows. (with the condition in ultimate)
+    //print_tab(bool_rows, dim);
+    printf("bool_rows evaluation\n");
+    print_tab(bool_rows, dim);
+
+
     transpose(ultimate, dim_con); // then we transpose utimate...
+    transpose(bool_columns, dim);
     ft_evaluate_tab(bool_columns,ultimate,dim); // ...to evaluate the columns
+
     transpose(ultimate, dim_con); //transpose back again ultimate
+
     transpose(bool_columns, dim);// same for bool_columns (so we can multiply terms by terms)
+    //print_tab(bool_columns, dim);
+    printf("bool_columns evaluation\n");
+    print_tab(bool_columns, dim);
+
+
+
     ft_mult_tab(bool_rows,bool_columns,dim);// mutiplication
 
 

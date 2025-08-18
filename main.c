@@ -4,6 +4,8 @@ int 	**set_value(int **tab, char *str,int dim);
 
 // for showing
 void	print_tab(int **tab, int dim);
+#include <stdio.h>
+
 
 // for solving the puzzle :D
 void    ft_evaluate_tab(int **bool_array,int **condition_array, int dim); 
@@ -41,6 +43,7 @@ int main (int argc, char **argv)
 
 	ultimate = set_value(ultimate, one_round_cond, dim_con);
     bool_rows = set_value(bool_rows, one_round, dim);
+    bool_columns = set_value(bool_columns, one_round, dim);
 // bool_rows and columns are already initialised filed with 0 :P
     print_tab(ultimate, dim_con);
     // transpose(ultimate, dim_con);
@@ -48,10 +51,12 @@ int main (int argc, char **argv)
     // print_tab(bool_rows, dim);
     // ft_evaluate_tab(bool_rows,ultimate,dim);
     // print_tab(bool_rows, dim);
+    printf("bool_columns\\rows init\n");
+    print_tab(bool_columns, dim);
 
-    print_tab(bool_rows, dim);
 
     ft_compare_tab(bool_rows,bool_columns,ultimate,dim,dim_con);
+    printf("boll_selected\n");
     print_tab(bool_rows, dim);
 
 
