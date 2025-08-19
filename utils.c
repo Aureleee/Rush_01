@@ -6,7 +6,7 @@ void ft_mult_tab(int **bool_rows, int **bool_columns, int dim);
 void transpose(int **tab_src, int dim);
 void ft_mult_tab(int **bool_rows, int **bool_columns, int dim);
 void    ft_evaluate_tab(int **bool_array,int **condition_array, int dim);
-void    ft_select(int **bool_rows, int dim, int *no_more_loop);
+void    ft_select(int **bool_rows, int dim);
 void	print_tab(int **tab, int dim);
 int **init_tab(int dim);    
 int 	**set_value(int **tab, char *str,int dim);
@@ -14,7 +14,8 @@ void    ft_compare_tab(int **bool_rows,  int **bool_columns,int **ultimate, int 
 void    ft_sub_update(int **THE_ARRAY_OF_INFINITY,int **ultimate,int **bool_rows, int dim, int *tower);
 void    ft_update(int **condition,int **ultimate,int **bool_rows, int **bool_columns, int dim, int *tower);
 void ft_bool_update(int **bool_rows,int **ultimate, int dim, int *tower);
-
+void ft_side_affected(int *line, int *B,int * T, int dim);
+void ft_update_all_condition(int **condition,int **bool_array, int dim);
 // void ALORS_PEUT_ETRE(int **ultimate ,int **THE_ARRAY_OF_INFINITY, char *empty_condition,int dim)
 // {
 
@@ -56,7 +57,7 @@ void    ft_cpy(int **destination,int **source, int dim)
     }
 }
 
-// }
+//This funtion update the boeard BOOL and UTLIME (it placed the tower)
 void ft_bool_update(int **bool_rows,int **ultimate, int dim, int *tower)
 {
     int i;
@@ -81,131 +82,10 @@ void ft_bool_update(int **bool_rows,int **ultimate, int dim, int *tower)
 
 
 
-void    ft_update(int **condition,int **ultimate,int **bool_rows, int **bool_columns, int dim, int *tower)
-{
-    int rows;
-    int columns;
-
-    rows = 1;
-    columns = 1;
-    if(*tower == dim)
-        {
-            while ( rows < dim + 1 )
-                {
-                    condition[rows][0]--;
-                    condition[rows][dim + 1]--;
-                    rows++;
-                }
-            while ( columns < dim + 1 )
-                {
-                    condition[0][columns]--;
-                    condition[dim +1][columns]--;
-                    columns++;
-                }
-            ft_bool_update(bool_rows,ultimate,dim,tower); // Actualise ultine et reset bool_row
-            //ft_bool_update(bool_columns,ultimate,dim,tower);
-            ft_cpy(bool_columns,bool_rows,dim);
-            printf("First round\n");
-
-            print_tab(ultimate, dim +2);
-            //print_tab(bool_rows, dim);
-
-            printf("First round -- condition\n");
-            print_tab(condition, dim +2);
-
-
-        }
-    else
-    {
-        ft_sub_update(condition,ultimate,bool_rows ,dim,tower);//Update condition depending on boll_row
-        transpose(condition, dim +2); //prepare THE ARRAY for bool_columns
-        transpose(bool_rows, dim);// 
-        ft_sub_update(condition,ultimate,bool_columns, dim,tower);
-        transpose(condition, dim +2);
-        transpose(bool_rows, dim);
-
-        ft_bool_update(bool_rows,ultimate,dim,tower); // Actualise ultine et reset bool_row
-        printf("bool -- tower = %d\n", *tower);
-        print_tab(bool_rows, dim );
-
-        printf("ultimate -- tower = %d\n", *tower);
-        print_tab(ultimate, dim +2);
-
-
-
-        printf("condition\n");
-
-        print_tab(condition, dim +2);
-    }
-    
-
-}
-void    ft_sub_update(int **THE_ARRAY_OF_INFINITY,int **ultimate,int **bool_rows, int dim, int *tower)
-{
-    int rows;
-    int columns;
-    int side;
-
-    side = 1;
-    rows = 0;
-    while(rows < dim)
-    {
-        columns = 0;
-        int touched = 0;
-        side = 1;
-        while (columns < dim)
-        {
-            if(bool_rows[rows][columns] == 1 && side == 1)
-                {side = 0;  // bottom side
-                touched = 1;}
-            if(bool_rows[rows][columns] == 9 && side == 1)
-                {side = dim + 1; // top side
-                touched = 1;} 
-            if(bool_rows[rows][columns] == 1)
-                {bool_rows[rows][columns] = 9;
-                ultimate[rows][columns] = *tower;}
-            columns++;
-        }
-        if(touched)
-            THE_ARRAY_OF_INFINITY[rows +1][side]--;
-        rows++;
-    }
-}
-
-
-
-// void    ft_skyscraper_puzzle_solver(int dim,char *condition)
-// {
-//     int **ultime; 
-//     int **tab_condition;
-//     int **bool_rows;
-// 	int **bool_columns;
-//     int tower;
-
-// 	bool_rows = init_tab(dim);
-// 	bool_columns = init_tab(dim);
-// 	ultime = init_tab(dim + 2);
-//     tab_condition = init_tab(dim + 2);
-//     tower = dim;
-    
-//     printf("ultime intitialisation\n");
-//     print_tab(ultime, dim +2);
-//     printf("bool_columns\\rows init\n");
-//     print_tab(bool_columns, dim);
-
-// //fin d'initialisation -
-
-
-// }
-
-
-
-
-
 //selectionne les lignes qui ne contiennent qu'un seul 1, et efface les 1 sur les colonnes respectives
 // IMportant pour reduire le nombre de possibiblity
 // But you need to transpose and do the same for the columns
-void    ft_select(int **bool_rows, int dim, int *no_more_loop)
+void    ft_select(int **bool_rows, int dim)
 {
     int rows;
     int columns;
@@ -243,8 +123,6 @@ void    ft_select(int **bool_rows, int dim, int *no_more_loop)
                 row_sub++;
 
             }
-        if (count != 1)
-            *no_more_loop = 1;
         }
         rows++;
     }
@@ -258,11 +136,7 @@ void    ft_select(int **bool_rows, int dim, int *no_more_loop)
 // 
 void    ft_compare_tab(int **bool_rows,  int **bool_columns,int **ultimate, int dim)
 {
-    int no_more_loop;
-    int count_transpo;
 
-    no_more_loop = 1;
-    count_transpo = 0;
 
     ft_evaluate_tab(bool_rows,ultimate,dim); // This function evaluate the rows. (with the condition in ultimate)
     //print_tab(bool_rows, dim);
@@ -290,8 +164,7 @@ void    ft_compare_tab(int **bool_rows,  int **bool_columns,int **ultimate, int 
     // a clear array :)
     while (i < 8)
     {
-        no_more_loop = 0;
-        ft_select(bool_rows, dim,&no_more_loop);
+        ft_select(bool_rows, dim);
         transpose(bool_rows,dim);  // l'idee derriere la transposition c'est de select une fois sur 
         //deux sur les colonnes et les lignes :)
         i++;
@@ -305,29 +178,13 @@ void    ft_compare_tab(int **bool_rows,  int **bool_columns,int **ultimate, int 
 }
 
 
-void ft_mult_tab(int **bool_rows, int **bool_columns, int dim)
-{
-    int i;
-    int j;
-
-    i = 0;
-    while (i < dim)
-    {
-        j = 0;
-        while (j < dim)
-        {
-            bool_rows[i][j] *= bool_columns[i][j];
-            if (bool_rows[i][j] == 81)
-                bool_rows[i][j] = 9;
-            j++;
-        }
-        i++;
-    }
-}
 
 
 
 
+
+
+// -------------------      DONT TOUCH ----------------------------
 void    ft_evaluate_tab(int **bool_array,int **condition_array, int dim)  // dim of condition_array = dim + 2 
 {
     int index;
@@ -345,8 +202,6 @@ void    ft_evaluate_tab(int **bool_array,int **condition_array, int dim)  // dim
         index++;
     }
 }
-
-
 void    ft_evaluate_line(int *line,int index_line, int dim, int *B, int *T)   //index_line is needed to update_condition :)
 {
 	int	indexB;
@@ -366,7 +221,7 @@ void    ft_evaluate_line(int *line,int index_line, int dim, int *B, int *T)   //
 
 	indexB = *B - 1;
 	indexT = dim - *T;
-    if (dim - *T - *B + 1 < 0)    // We might need to update here
+    if (dim - *T - *B + 1 < 0)    // We might need to update here (for dim > 5)
         printf("no solution\n");
     else if (bottom_edge - top_edge - 2 >= 0)
     {
@@ -406,7 +261,6 @@ void    ft_evaluate_line(int *line,int index_line, int dim, int *B, int *T)   //
         
     }
 }
-
 void ft_update_edge(int *line, int dim, int *top_edge, int *bottom_edge)
 {
     int index;
@@ -419,7 +273,7 @@ void ft_update_edge(int *line, int dim, int *top_edge, int *bottom_edge)
         index++;
     }
     index = dim -1;
-    *top_edge = dim -1;
+    *top_edge = dim -1; 
     while (index > -1 && line[index]!= 9)
     {
         (*top_edge)--;
@@ -430,6 +284,56 @@ void ft_update_edge(int *line, int dim, int *top_edge, int *bottom_edge)
 
 
 
+
+
+
+// This function is the ULTIMATE UPDATE
+void ft_update_all_condition(int **condition,int **bool_array, int dim)
+{
+    int rows;
+
+    rows = 0;
+    while (rows < 0)
+    {
+        ft_side_affected(bool_array[rows],&condition[rows + 1][0], &condition[rows + 1][dim + 1], dim);
+        rows ++;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+    }
+    transpose(condition, dim + 2);
+    transpose(bool_array, dim);
+    rows = 0;
+    while (rows < 0)
+    {
+        ft_side_affected(bool_array[rows],&condition[rows + 1][0], &condition[rows + 1][dim + 1], dim);
+        rows ++;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+    }
+    transpose(condition, dim + 2);
+    transpose(bool_array, dim);
+}
+// this function will Update condition for the selected line :D
+void ft_side_affected(int *line, int *B,int * T, int dim)
+{
+    int touch;
+    int index;
+
+    index = 0; 
+    while (index < dim && index != 9)
+    {
+        if (line[index] == 1)
+            {*B -= 1;
+            touch = 0;}
+        if (index == dim -1)
+            *T-=1;
+        index++;
+    }
+    while (index < dim)
+    {
+        if (line[index] == 1)
+            *T+=1;
+    }
+}
+    
+
+// Usefull function :D
 void transpose(int **tab_src, int dim)
 {
     int i;
@@ -451,13 +355,22 @@ void transpose(int **tab_src, int dim)
     }
 }
 
-// if((*B==1))
-//     {
-//         line[indexB] = 1;    
-//         ft_please_increase_the_maximum_length_of_function(line,length_line);
-//     }
-//     if((*tR == 1 && line[*tR] != 9))
-//     {
-//         line[indexT] = 1;
-//         ft_please_increase_the_maximum_length_of_function(line,length_line);
-//     }
+void ft_mult_tab(int **bool_rows, int **bool_columns, int dim)
+{
+    int i;
+    int j;
+
+    i = 0;
+    while (i < dim)
+    {
+        j = 0;
+        while (j < dim)
+        {
+            bool_rows[i][j] *= bool_columns[i][j];
+            if (bool_rows[i][j] == 81)
+                bool_rows[i][j] = 9;
+            j++;
+        }
+        i++;
+    }
+}

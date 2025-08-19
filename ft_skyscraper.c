@@ -4,19 +4,21 @@ void ft_mult_tab(int **bool_rows, int **bool_columns, int dim);
 void transpose(int **tab_src, int dim);
 void ft_mult_tab(int **bool_rows, int **bool_columns, int dim);
 void    ft_evaluate_tab(int **bool_array,int **condition_array, int dim);
-void    ft_select(int **bool_rows, int dim, int *no_more_loop);
+void    ft_select(int **bool_rows, int di);
 void	print_tab(int **tab, int dim);
 int **init_tab(int dim);    
 int 	**set_value(int **tab, char *str,int dim);
 void    ft_sub_update(int **THE_ARRAY_OF_INFINITY,int **bool_rows, int dim);
 void    ft_update(int **condition,int **ultimate,int **bool_rows, int **bool_columns, int dim, int *tower);
 void ft_bool_update(int **bool_rows,int **ultimate , int dim, int *tower);
+void    ft_cpy(int **destination,int **source, int dim);
 
 void    ft_compare_tab(int **bool_rows,  int **bool_columns,int **ultimate, int dim);
 #include <stdio.h>
 
+void ft_update_all_condition(int **condition,int **bool_array, int dim);
 
-void    ft_skyscraper_puzzle_solver(int dim,char *condition)
+void ft_skyscraper_puzzle_solver(int dim,char *condition)
 {
     int **ultime; 
     int **tab_condition;
@@ -45,11 +47,14 @@ void    ft_skyscraper_puzzle_solver(int dim,char *condition)
     print_tab(bool_columns, dim);
 
     //fin d'initialisation -
-    while (tower > 3)
+    while (tower > 4)
     {
         ft_compare_tab(bool_rows,bool_columns,tab_condition,dim);
         //print_tab(bool_rows,dim);
-        ft_update(tab_condition, ultime, bool_rows,bool_columns,dim,&tower);
+        ft_update_all_condition(tab_condition, bool_rows,dim);
+        ft_bool_update(bool_rows,ultime, dim,&tower);
+
+        ft_cpy(bool_columns,bool_rows,dim);
         tower--;
     }
 }
