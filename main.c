@@ -23,6 +23,7 @@ int main (int argc, char **argv)
 	int **bool_rows;
 	int **bool_columns;
     int **ultimate;
+    int **THE_ARRAY_OF_INFINITY;
 
 // for testing
     int line1[] = {0, 0, 0, 0, 0};
@@ -32,7 +33,7 @@ int main (int argc, char **argv)
     char *six_empty ="000000000000000000000000000000000000";
     char *sevem_empty = "0000000000000000000000000000000000000000000000000";
     char *one_round ="0000900900900000009009000";
-    char *empty_condition= "9332219500000130000031000002200000220090039312239";
+    char *empty_condition= "9332219500000130000031000002200000220000039312239";
     char *one_round_cond = "9221109400009020090020900001100090110900029201129";
     char *six_empty_cond = "9152223910000003400000023000000330000001200000022000000493122439";
     char *seven_empty_cond = "912233239100000003300000002200000004200000003300000002400000001300000004932213329";
@@ -47,8 +48,12 @@ int main (int argc, char **argv)
 	bool_rows = init_tab(dim);
 	bool_columns = init_tab(dim);
 	ultimate = init_tab(dim_con);
+    THE_ARRAY_OF_INFINITY = init_tab(dim_con);
+
 
 	ultimate = set_value(ultimate, empty_condition, dim_con);
+	THE_ARRAY_OF_INFINITY = set_value(ultimate, empty_condition, dim_con);
+
     bool_rows = set_value(bool_rows, empty, dim);
     bool_columns = set_value(bool_columns, empty, dim);
 // bool_rows and columns are already initialised filed with 0 :P
@@ -66,13 +71,15 @@ int main (int argc, char **argv)
 
     printf("boll_selected\n");
     //print_tab(bool_rows, dim);
-    print_tab(ultimate, dim_con);
+    // print_tab(ultimate, dim_con);
 
-    ft_update(ultimate,bool_rows,dim, dim);
-    print_tab(ultimate, dim_con);
-    print_tab(bool_rows, dim);
+    // ft_update(ultimate,bool_rows,dim, dim);
+    // print_tab(ultimate, dim_con);
+    // transpose(bool_rows, dim);
 
+    // print_tab(bool_rows, dim);
 
+    ALORS_PEUT_ETRE(ultimate,THE_ARRAY_OF_INFINITY,empty_condition,dim)
 	return (0);
 
 }
